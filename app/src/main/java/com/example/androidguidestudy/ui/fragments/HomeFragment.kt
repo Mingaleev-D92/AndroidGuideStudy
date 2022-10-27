@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.androidguidestudy.data.ArticleRepository
+import com.example.androidguidestudy.data.InMemoryArticleService
 import com.example.androidguidestudy.databinding.FragmentHomeBinding
 import com.example.androidguidestudy.ui.fragments.adapter.ArticleAdapter
 
@@ -16,6 +18,8 @@ class HomeFragment : Fragment() {
    private val binding get() = mBinding!!
 
    private val adapter by lazy { ArticleAdapter() }
+
+   private val articleRepository:ArticleRepository = InMemoryArticleService()
 
    override fun onCreateView(
       inflater: LayoutInflater, container: ViewGroup?,
@@ -29,15 +33,13 @@ class HomeFragment : Fragment() {
       super.onViewCreated(view, savedInstanceState)
       setupRecyclerView()
 
+      adapter.articles = articleRepository.fetchArticles()
+
    }
 
    private fun setupRecyclerView() {
-      with(binding) {
-         with(articleListRv) {
-            adapter = adapter
-            layoutManager = LinearLayoutManager(context)
-         }
-      }
+      binding.articleListRv.adapter = adapter
+      binding.articleListRv.layoutManager = LinearLayoutManager(context)
       val dividerItemDecoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
       binding.articleListRv.addItemDecoration(dividerItemDecoration)
    }
