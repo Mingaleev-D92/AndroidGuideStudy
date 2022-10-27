@@ -1,28 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  android:padding="8dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <TextView
-    android:id="@+id/article_title"
-    android:layout_width="0dp"
+  <data>
+    <variable
+      name="articleDB"
+      type="com.example.androidguidestudy.model.Article" />
+
+  </data>
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="Test text Test"
-    android:textColor="@color/black"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    android:padding="8dp">
 
-  <TextView
-    android:id="@+id/article_author"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:text="Test text Author"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/article_title" />
+    <TextView
+      android:id="@+id/article_title"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:text="@{articleDB.title}"
+      android:textColor="@color/black"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+      android:id="@+id/article_author"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:text="@{articleDB.authorName}"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/article_title" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -34,14 +34,17 @@ class ArticleAdapter : RecyclerView.Adapter<ArticleAdapter.MyViewHolder>() {
       return articles.size
    }
 
-   inner class MyViewHolder(binding: ListItemArticleBinding) :
+   inner class MyViewHolder(private val binding: ListItemArticleBinding) :
       RecyclerView.ViewHolder(binding.root) {
-      private val titleTextView = binding.articleTitle
-      private val authorTextView = binding.articleAuthor
+//      private val titleTextView = binding.articleTitle
+//      private val authorTextView = binding.articleAuthor
 
       fun bind(article: Article) {
-         titleTextView.text = article.title
-         authorTextView.text = article.authorName
+//         titleTextView.text = article.title
+//         authorTextView.text = article.authorName
+
+         binding.articleDB = article
+         binding.executePendingBindings()
       }
    }
 }
