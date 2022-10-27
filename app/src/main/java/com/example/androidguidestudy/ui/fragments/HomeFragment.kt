@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.androidguidestudy.data.ArticleRepository
@@ -15,6 +17,7 @@ import com.example.androidguidestudy.databinding.FragmentHomeBinding
 import com.example.androidguidestudy.model.Article
 import com.example.androidguidestudy.ui.fragments.adapter.ArticleAdapter
 import com.example.androidguidestudy.ui.fragments.adapter.ArticleClickListener
+import com.example.androidguidestudy.ui.viewmodel.HomeViewModel
 
 
 class HomeFragment : Fragment(), ArticleClickListener {
@@ -23,7 +26,20 @@ class HomeFragment : Fragment(), ArticleClickListener {
 
    private val adapter by lazy { ArticleAdapter(clickListener = this) }
 
-   private val articleRepository: ArticleRepository = InMemoryArticleService()
+   private lateinit var homeViewModel: HomeViewModel
+
+   private val homeViewModelFactory = object :ViewModelProvider.Factory{
+      override fun <T : ViewModel> create(modelClass: Class<T>): T {
+         val repository:ArticleRepository = InMemoryArticleService()
+
+         return HomeViewModel(articleRepository = repository) as T
+      }
+   }
+
+   override fun onCreate(savedInstanceState: Bundle?) {
+      super.onCreate(savedInstanceState)
+      homeViewModel = ViewModelProvider(this,homeViewModelFactory)[HomeViewModel::class.java]
+   }
 
    override fun onCreateView(
       inflater: LayoutInflater, container: ViewGroup?,
@@ -36,9 +52,14 @@ class HomeFragment : Fragment(), ArticleClickListener {
    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
       super.onViewCreated(view, savedInstanceState)
       setupRecyclerView()
+      subscribeToViewModel()
 
-      adapter.articles = articleRepository.fetchArticles()
+   }
 
+   private fun subscribeToViewModel() {
+         homeViewModel.articles.observe(viewLifecycleOwner) {
+            adapter.articles = it
+      }
    }
 
    private fun setupRecyclerView() {
@@ -50,7 +71,7 @@ class HomeFragment : Fragment(), ArticleClickListener {
 
    override fun onArticleLicked(article: Article) {
       val url = Uri.parse(article.url)
-      val intent = Intent(Intent.ACTION_VIEW,url)
+      val intent = Intent(Intent.ACTION_VIEW, url)
       startActivity(intent)
    }
 
