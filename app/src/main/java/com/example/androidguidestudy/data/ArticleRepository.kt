@@ -11,5 +11,5 @@ import com.example.androidguidestudy.model.Article
  */
 
 interface ArticleRepository {
-   fun fetchArticles():List<Article>
+  suspend fun fetchArticles():List<Article>
 }
