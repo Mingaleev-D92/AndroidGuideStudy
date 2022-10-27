@@ -24,9 +24,7 @@ class HomeViewModel(
 
    init{
       viewModelScope.launch {
-         val fetchedArticles = withContext(Dispatchers.IO){
-            articleRepository.fetchArticles()
-         }
+         val fetchedArticles = articleRepository.fetchArticles()
          _article.value = fetchedArticles
       }
 
