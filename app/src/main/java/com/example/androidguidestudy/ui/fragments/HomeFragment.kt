@@ -12,14 +12,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.androidguidestudy.data.ArticleRepository
-import com.example.androidguidestudy.data.InMemoryArticleService
 import com.example.androidguidestudy.data.remote.AndroidEssenceArticleService
 import com.example.androidguidestudy.data.remote.AndroidEssenceRetrofitApi
+import com.example.androidguidestudy.data.remote.ArticleListViewState
 import com.example.androidguidestudy.databinding.FragmentHomeBinding
 import com.example.androidguidestudy.model.Article
 import com.example.androidguidestudy.ui.fragments.adapter.ArticleAdapter
 import com.example.androidguidestudy.ui.fragments.adapter.ArticleClickListener
 import com.example.androidguidestudy.ui.viewmodel.HomeViewModel
+import com.example.androidguidestudy.util.visibleIf
 
 
 class HomeFragment : Fragment(), ArticleClickListener {
@@ -61,9 +62,15 @@ class HomeFragment : Fragment(), ArticleClickListener {
    }
 
    private fun subscribeToViewModel() {
-         homeViewModel.articles.observe(viewLifecycleOwner) {
-            adapter.articles = it
-      }
+       homeViewModel.state.observe(viewLifecycleOwner){viewState ->
+         displayViewState(viewState)
+       }
+   }
+
+   private fun displayViewState(viewState: ArticleListViewState) {
+      binding.progressBar.visibleIf(viewState.showLoading)
+      binding.articleListRv.visibleIf(viewState.showArticles)
+      adapter.articles = viewState.articles
    }
 
    private fun setupRecyclerView() {
