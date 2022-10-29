@@ -3,6 +3,7 @@ package com.example.androidguidestudy.ui.fragments.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidguidestudy.databinding.ListItemArticleBinding
 import com.example.androidguidestudy.model.Article
@@ -25,7 +26,7 @@ class ArticleAdapter(
    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
       val inflater = LayoutInflater.from(parent.context)
       val binding = ListItemArticleBinding.inflate(inflater, parent, false)
-      return MyViewHolder(binding,clickListener)
+      return MyViewHolder(binding, clickListener)
    }
 
    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
@@ -42,27 +43,22 @@ class ArticleAdapter(
       private val clickListener: ArticleClickListener
    ) :
       RecyclerView.ViewHolder(binding.root), View.OnClickListener {
-//      private val titleTextView = binding.articleTitle
-//      private val authorTextView = binding.articleAuthor
+      private var article: Article? = null
 
       init {
-         binding.root.setOnClickListener (this)
+         binding.root.setOnClickListener(this)
       }
 
       fun bind(article: Article) {
-//         titleTextView.text = article.title
-//         authorTextView.text = article.authorName
+         binding.articleTitle.text =
+            HtmlCompat.fromHtml(article.title, HtmlCompat.FROM_HTML_MODE_LEGACY)
+         binding.articleAuthor.text = article.authorName
 
-         binding.articleDB = article
-         binding.executePendingBindings()
+
       }
 
       override fun onClick(v: View?) {
-         val article = binding.articleDB
-         if (article != null) {
-            clickListener.onArticleLicked(article)
-         }
-
+         article?.let { clickListener::onArticleLicked }
       }
    }
 }
