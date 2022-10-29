@@ -1,12 +1,15 @@
 package com.example.androidguidestudy.ui.fragments.adapter
 
+import android.text.Spanned
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.androidguidestudy.R
 import com.example.androidguidestudy.databinding.ListItemArticleBinding
 import com.example.androidguidestudy.model.Article
+import com.example.androidguidestudy.util.HtmlString
 
 /**
  * @author : Mingaleev D
@@ -50,9 +53,12 @@ class ArticleAdapter(
       }
 
       fun bind(article: Article) {
-         binding.articleTitle.text =
-            HtmlCompat.fromHtml(article.title, HtmlCompat.FROM_HTML_MODE_LEGACY)
-         binding.articleAuthor.text = article.authorName
+         this.article = article
+         binding.articleTitle.text = HtmlString(article.title).getValue()
+         binding.articleAuthor.text = itemView.context.getString(
+            R.string.by_author,
+            article.authorName
+         )
 
 
       }

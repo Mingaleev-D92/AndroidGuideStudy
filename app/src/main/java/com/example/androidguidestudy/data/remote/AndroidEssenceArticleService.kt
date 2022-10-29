@@ -12,14 +12,14 @@ class AndroidEssenceArticleService(
    private val api: AndroidEssenceRetrofitApi
 ) : ArticleRepository {
    override suspend fun fetchArticles(): List<Article> {
-      return api.getFeed().items.map ( AndroidEssenceFeedItem::toArticle )
+      return api.getFeed().items?.map ( AndroidEssenceFeedItem::toArticle ).orEmpty()
    }
 }
 
 private fun AndroidEssenceFeedItem.toArticle(): Article {
    return Article(
-      title = this.title,
-      authorName = this.author.name,
-      url = this.link.href
+      title = this.title.orEmpty(),
+      authorName = this.author?.name.orEmpty(),
+      url = this.link?.href.orEmpty()
    )
 }
