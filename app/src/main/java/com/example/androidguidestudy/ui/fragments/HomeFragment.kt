@@ -12,14 +12,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.androidguidestudy.data.ArticleRepository
-import com.example.androidguidestudy.data.InMemoryArticleService
 import com.example.androidguidestudy.data.remote.AndroidEssenceArticleService
 import com.example.androidguidestudy.data.remote.AndroidEssenceRetrofitApi
+import com.example.androidguidestudy.data.remote.ArticleListViewState
 import com.example.androidguidestudy.databinding.FragmentHomeBinding
 import com.example.androidguidestudy.model.Article
 import com.example.androidguidestudy.ui.fragments.adapter.ArticleAdapter
 import com.example.androidguidestudy.ui.fragments.adapter.ArticleClickListener
 import com.example.androidguidestudy.ui.viewmodel.HomeViewModel
+import com.example.androidguidestudy.util.visibleIf
 
 
 class HomeFragment : Fragment(), ArticleClickListener {
@@ -30,9 +31,9 @@ class HomeFragment : Fragment(), ArticleClickListener {
 
    private lateinit var homeViewModel: HomeViewModel
 
-   private val homeViewModelFactory = object :ViewModelProvider.Factory{
+   private val homeViewModelFactory = object : ViewModelProvider.Factory {
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
-         val repository:ArticleRepository =AndroidEssenceArticleService(
+         val repository: ArticleRepository = AndroidEssenceArticleService(
             api = AndroidEssenceRetrofitApi.getDefaultApi()
          )
 
@@ -42,7 +43,7 @@ class HomeFragment : Fragment(), ArticleClickListener {
 
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
-      homeViewModel = ViewModelProvider(this,homeViewModelFactory)[HomeViewModel::class.java]
+      homeViewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
    }
 
    override fun onCreateView(
@@ -61,8 +62,17 @@ class HomeFragment : Fragment(), ArticleClickListener {
    }
 
    private fun subscribeToViewModel() {
-         homeViewModel.articles.observe(viewLifecycleOwner) {
-            adapter.articles = it
+      homeViewModel.state.observe(viewLifecycleOwner) { viewState ->
+         displayViewState(viewState)
+      }
+   }
+
+   private fun displayViewState(viewState: ArticleListViewState) {
+      binding.progressBar.visibleIf(viewState is ArticleListViewState.Loading)
+      binding.articleListRv.visibleIf(viewState is ArticleListViewState.Success)
+
+      if (viewState is ArticleListViewState.Success) {
+         adapter.articles = viewState.articles
       }
    }
 
