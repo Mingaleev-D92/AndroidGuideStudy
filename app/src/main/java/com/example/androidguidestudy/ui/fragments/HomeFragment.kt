@@ -31,9 +31,9 @@ class HomeFragment : Fragment(), ArticleClickListener {
 
    private lateinit var homeViewModel: HomeViewModel
 
-   private val homeViewModelFactory = object :ViewModelProvider.Factory{
+   private val homeViewModelFactory = object : ViewModelProvider.Factory {
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
-         val repository:ArticleRepository =AndroidEssenceArticleService(
+         val repository: ArticleRepository = AndroidEssenceArticleService(
             api = AndroidEssenceRetrofitApi.getDefaultApi()
          )
 
@@ -43,7 +43,7 @@ class HomeFragment : Fragment(), ArticleClickListener {
 
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
-      homeViewModel = ViewModelProvider(this,homeViewModelFactory)[HomeViewModel::class.java]
+      homeViewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
    }
 
    override fun onCreateView(
@@ -62,15 +62,18 @@ class HomeFragment : Fragment(), ArticleClickListener {
    }
 
    private fun subscribeToViewModel() {
-       homeViewModel.state.observe(viewLifecycleOwner){viewState ->
+      homeViewModel.state.observe(viewLifecycleOwner) { viewState ->
          displayViewState(viewState)
-       }
+      }
    }
 
    private fun displayViewState(viewState: ArticleListViewState) {
-      binding.progressBar.visibleIf(viewState.showLoading)
-      binding.articleListRv.visibleIf(viewState.showArticles)
-      adapter.articles = viewState.articles
+      binding.progressBar.visibleIf(viewState is ArticleListViewState.Loading)
+      binding.articleListRv.visibleIf(viewState is ArticleListViewState.Success)
+
+      if (viewState is ArticleListViewState.Success) {
+         adapter.articles = viewState.articles
+      }
    }
 
    private fun setupRecyclerView() {

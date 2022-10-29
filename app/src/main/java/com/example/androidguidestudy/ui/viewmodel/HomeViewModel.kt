@@ -25,10 +25,10 @@ class HomeViewModel(
 
    init{
       viewModelScope.launch {
-         _state.value = ArticleListViewState.loading()
+         _state.value = ArticleListViewState.Loading
 
          val articles = articleRepository.fetchArticles()
-         _state.value = ArticleListViewState.success(articles = articles)
+         _state.value = ArticleListViewState.Success(articles = articles)
       }
 
    }
