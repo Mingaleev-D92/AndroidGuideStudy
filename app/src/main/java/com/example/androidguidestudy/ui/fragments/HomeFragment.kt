@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.androidguidestudy.data.ArticleRepository
 import com.example.androidguidestudy.data.InMemoryArticleService
+import com.example.androidguidestudy.data.remote.AndroidEssenceArticleService
+import com.example.androidguidestudy.data.remote.AndroidEssenceRetrofitApi
 import com.example.androidguidestudy.databinding.FragmentHomeBinding
 import com.example.androidguidestudy.model.Article
 import com.example.androidguidestudy.ui.fragments.adapter.ArticleAdapter
@@ -30,7 +32,9 @@ class HomeFragment : Fragment(), ArticleClickListener {
 
    private val homeViewModelFactory = object :ViewModelProvider.Factory{
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
-         val repository:ArticleRepository = InMemoryArticleService()
+         val repository:ArticleRepository =AndroidEssenceArticleService(
+            api = AndroidEssenceRetrofitApi.getDefaultApi()
+         )
 
          return HomeViewModel(articleRepository = repository) as T
       }
