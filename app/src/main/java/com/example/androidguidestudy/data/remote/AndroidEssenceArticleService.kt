@@ -1,6 +1,7 @@
 package com.example.androidguidestudy.data.remote
 
 import com.example.androidguidestudy.data.ArticleRepository
+import com.example.androidguidestudy.data.DataResponse
 import com.example.androidguidestudy.model.Article
 
 /**
@@ -11,8 +12,13 @@ import com.example.androidguidestudy.model.Article
 class AndroidEssenceArticleService(
    private val api: AndroidEssenceRetrofitApi
 ) : ArticleRepository {
-   override suspend fun fetchArticles(): List<Article> {
-      return api.getFeed().items?.map ( AndroidEssenceFeedItem::toArticle ).orEmpty()
+   override suspend fun fetchArticles(): DataResponse<List<Article>> {
+      return try {
+         val articles = api.getFeed().items?.map(AndroidEssenceFeedItem::toArticle).orEmpty()
+         DataResponse.Success(articles)
+      } catch (e: Throwable) {
+         DataResponse.Error(e)
+      }
    }
 }
 

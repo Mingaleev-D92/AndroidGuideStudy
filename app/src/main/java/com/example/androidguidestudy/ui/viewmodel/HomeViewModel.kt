@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.androidguidestudy.data.ArticleRepository
+import com.example.androidguidestudy.data.DataResponse
 import com.example.androidguidestudy.data.remote.ArticleListViewState
 import com.example.androidguidestudy.model.Article
 import kotlinx.coroutines.Dispatchers
@@ -23,12 +24,15 @@ class HomeViewModel(
    private val _state: MutableLiveData<ArticleListViewState> = MutableLiveData()
    val state: LiveData<ArticleListViewState> = _state
 
-   init{
+   init {
       viewModelScope.launch {
          _state.value = ArticleListViewState.Loading
 
-         val articles = articleRepository.fetchArticles()
-         _state.value = ArticleListViewState.Success(articles = articles)
+         val response = articleRepository.fetchArticles()
+         _state.value = when (response) {
+            is DataResponse.Success -> ArticleListViewState.Success(response.data)
+            is DataResponse.Error -> ArticleListViewState.Error(response.error)
+         }
       }
 
    }
