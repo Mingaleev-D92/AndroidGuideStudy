@@ -59,6 +59,10 @@ class HomeFragment : Fragment(), ArticleClickListener {
       setupRecyclerView()
       subscribeToViewModel()
 
+      binding.retryBtn.setOnClickListener {
+         homeViewModel.retryClicked()
+      }
+
    }
 
    private fun subscribeToViewModel() {
@@ -70,7 +74,7 @@ class HomeFragment : Fragment(), ArticleClickListener {
    private fun displayViewState(viewState: ArticleListViewState) {
       binding.progressBar.visibleIf(viewState is ArticleListViewState.Loading)
       binding.articleListRv.visibleIf(viewState is ArticleListViewState.Success)
-      binding.errorMessage.visibleIf(viewState is ArticleListViewState.Error)
+      binding.errorGroup.visibleIf(viewState is ArticleListViewState.Error)
 
       if (viewState is ArticleListViewState.Success) {
          adapter.articles = viewState.articles

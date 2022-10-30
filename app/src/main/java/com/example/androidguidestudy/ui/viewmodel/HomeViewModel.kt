@@ -18,13 +18,18 @@ import kotlinx.coroutines.withContext
  */
 
 class HomeViewModel(
-   articleRepository: ArticleRepository
+  private val articleRepository: ArticleRepository
 ) : ViewModel() {
 
    private val _state: MutableLiveData<ArticleListViewState> = MutableLiveData()
    val state: LiveData<ArticleListViewState> = _state
 
    init {
+      fetchArticlesFromRepository()
+
+   }
+   private fun fetchArticlesFromRepository() {
+
       viewModelScope.launch {
          _state.value = ArticleListViewState.Loading
 
@@ -34,6 +39,10 @@ class HomeViewModel(
             is DataResponse.Error -> ArticleListViewState.Error(response.error)
          }
       }
-
    }
+   fun retryClicked(){
+      fetchArticlesFromRepository()
+   }
+
+
 }

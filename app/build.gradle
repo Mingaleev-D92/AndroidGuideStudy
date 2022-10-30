@@ -69,4 +69,6 @@ dependencies {
     // OkHTTP
     def okhttpVersion = "4.9.0"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+
+    implementation 'com.airbnb.android:lottie:5.2.0'
 }
