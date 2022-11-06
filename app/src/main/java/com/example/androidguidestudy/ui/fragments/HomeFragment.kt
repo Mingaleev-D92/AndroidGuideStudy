@@ -21,8 +21,10 @@ import com.example.androidguidestudy.ui.fragments.adapter.ArticleAdapter
 import com.example.androidguidestudy.ui.fragments.adapter.ArticleClickListener
 import com.example.androidguidestudy.ui.viewmodel.HomeViewModel
 import com.example.androidguidestudy.util.visibleIf
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class HomeFragment : Fragment(), ArticleClickListener {
    private var mBinding: FragmentHomeBinding? = null
    private val binding get() = mBinding!!
@@ -31,13 +33,12 @@ class HomeFragment : Fragment(), ArticleClickListener {
 
    private lateinit var homeViewModel: HomeViewModel
 
+   @Inject
+   lateinit var articleRepository:ArticleRepository
+
    private val homeViewModelFactory = object : ViewModelProvider.Factory {
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
-         val repository: ArticleRepository = AndroidEssenceArticleService(
-            api = AndroidEssenceRetrofitApi.getDefaultApi()
-         )
-
-         return HomeViewModel(articleRepository = repository) as T
+         return HomeViewModel(articleRepository = articleRepository) as T
       }
    }
 
