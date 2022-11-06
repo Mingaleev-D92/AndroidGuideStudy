@@ -8,16 +8,18 @@ import com.example.androidguidestudy.data.ArticleRepository
 import com.example.androidguidestudy.data.DataResponse
 import com.example.androidguidestudy.data.remote.ArticleListViewState
 import com.example.androidguidestudy.model.Article
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 /**
  * @author : Mingaleev D
  * @data : 27/10/2022
  */
-
-class HomeViewModel(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
   private val articleRepository: ArticleRepository
 ) : ViewModel() {
 

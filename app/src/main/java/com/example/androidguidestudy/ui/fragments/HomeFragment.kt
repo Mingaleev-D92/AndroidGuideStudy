@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -21,30 +22,17 @@ import com.example.androidguidestudy.ui.fragments.adapter.ArticleAdapter
 import com.example.androidguidestudy.ui.fragments.adapter.ArticleClickListener
 import com.example.androidguidestudy.ui.viewmodel.HomeViewModel
 import com.example.androidguidestudy.util.visibleIf
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class HomeFragment : Fragment(), ArticleClickListener {
    private var mBinding: FragmentHomeBinding? = null
    private val binding get() = mBinding!!
 
    private val adapter by lazy { ArticleAdapter(clickListener = this) }
 
-   private lateinit var homeViewModel: HomeViewModel
-
-   private val homeViewModelFactory = object : ViewModelProvider.Factory {
-      override fun <T : ViewModel> create(modelClass: Class<T>): T {
-         val repository: ArticleRepository = AndroidEssenceArticleService(
-            api = AndroidEssenceRetrofitApi.getDefaultApi()
-         )
-
-         return HomeViewModel(articleRepository = repository) as T
-      }
-   }
-
-   override fun onCreate(savedInstanceState: Bundle?) {
-      super.onCreate(savedInstanceState)
-      homeViewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
-   }
+   private val homeViewModel: HomeViewModel by viewModels()
 
    override fun onCreateView(
       inflater: LayoutInflater, container: ViewGroup?,
